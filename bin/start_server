@@ -1,0 +1,11 @@
+#!/bin/bash
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+set -x
+exec poetry run gunicorn \
+    --access-logfile '-' \
+    --error-logfile '-' \
+    --access-logformat '%(t)s %(p)s [%({request-id}o)s] "%({x-forwarded-for}i)s" %(h)s %(l)s %(u)s "%(r)s" %(s)s bytes=%(b)s sec=%(L)s "%(f)s" "%(a)s"' \
+    --bind 0.0.0.0:8000 \
+    memhog.main:app
